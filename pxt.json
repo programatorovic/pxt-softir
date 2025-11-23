@@ -1,0 +1,15 @@
+{
+  "name": "softir",
+  "description": "Software UART receiver for IR modules (Keyestudio/HX1838) with autobaud and read-hex blocks.",
+  "dependencies": {
+    "core": "file:../core"
+  },
+  "files": [
+    "softir.ts",
+    "autobaud.ts",
+    "protocols.ts",
+    "README.md"
+  ],
+  "testFiles": [],
+  "public": true
+}
