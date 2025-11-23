@@ -42,8 +42,7 @@ namespace SoftIR {
             else if (Math.abs(baud - 4800) < 600) baud = 4800
             else if (Math.abs(baud - 2400) < 400) baud = 2400
             else if (Math.abs(baud - 19200) < 2000) baud = 19200
-            _baud = baud
-            _bitTimeUs = Math.idiv(1000000, _baud)
+            SoftIR.setBaud(baud)
             return baud
         } else {
             // Only one byte detected - use single measurement
@@ -54,8 +53,7 @@ namespace SoftIR {
             else if (Math.abs(baud - 4800) < 600) baud = 4800
             else if (Math.abs(baud - 2400) < 400) baud = 2400
             else if (Math.abs(baud - 19200) < 2000) baud = 19200
-            _baud = baud
-            _bitTimeUs = Math.idiv(1000000, _baud)
+            SoftIR.setBaud(baud)
             return baud
         }
     }

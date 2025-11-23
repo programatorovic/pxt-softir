@@ -105,6 +105,14 @@ namespace SoftIR {
         _protocol = p
     }
 
+    //% block="IRSoft.setBaud $baud"
+    //% weight=95
+    export function setBaud(baud: number) {
+        if (baud <= 0) return
+        _baud = baud
+        _bitTimeUs = Math.idiv(1000000, _baud)
+    }
+
     //% block="IRSoft.readHex"
     //% weight=80
     export function readHex(): string {
