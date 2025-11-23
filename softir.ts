@@ -31,12 +31,10 @@ namespace SoftIR {
     /**
      * Exported helper to set baud from other modules (autobaud).
      */
-    //% shim=softir::setBaud
     export function setBaud(baud: number): void {
-        // This shim will be replaced by the real implementation below in TS (not purely shim).
-        // However some toolchains may require a shim annotation — if your build complains about shim,
-        // simply remove the `//% shim=softir::setBaud` line.
+       setBaud_impl(baud)
     }
+
 
     // Provide actual implementation (works with MakeCode; keep it inside namespace)
     export function __internalSetBaud(baud: number) {
