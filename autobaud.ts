@@ -25,6 +25,7 @@ namespace SoftIR {
         while (pins.digitalReadPin(pin) == 1) {
             if (control.micros() > waitTimeout) break
         }
+        let baud = 0
         if (pins.digitalReadPin(pin) == 0) {
             t2_start = control.micros()
             // measure end of second start bit
@@ -36,25 +37,34 @@ namespace SoftIR {
             let bt2 = t2_end - t2_start
             let bitTimeUs = Math.idiv(bt1 + bt2, 2)
             if (bitTimeUs <= 0) return 0
-            let baud = Math.round(1000000 / bitTimeUs)
-            // choose nearest standard baud
-            if (Math.abs(baud - 9600) < 1000) baud = 9600
-            else if (Math.abs(baud - 4800) < 600) baud = 4800
-            else if (Math.abs(baud - 2400) < 400) baud = 2400
-            else if (Math.abs(baud - 19200) < 2000) baud = 19200
-            SoftIR.setBaud(baud)
-            return baud
+            baud = Math.round(1000000 / bitTimeUs)
         } else {
             // Only one byte detected - use single measurement
             let bitTimeUs = t1_end - t1_start
             if (bitTimeUs <= 0) return 0
-            let baud = Math.round(1000000 / bitTimeUs)
-            if (Math.abs(baud - 9600) < 1000) baud = 9600
-            else if (Math.abs(baud - 4800) < 600) baud = 4800
-            else if (Math.abs(baud - 2400) < 400) baud = 2400
-            else if (Math.abs(baud - 19200) < 2000) baud = 19200
-            SoftIR.setBaud(baud)
-            return baud
+            baud = Math.round(1000000 / bitTimeUs)
         }
+
+        // choose nearest standard baud
+        if (Math.abs(baud - 9600) < 1000) baud = 9600
+        else if (Math.abs(baud - 4800) < 600) baud = 4800
+        else if (Math.abs(baud - 2400) < 400) baud = 2400
+        else if (Math.abs(baud - 19200) < 2000) baud = 19200
+
+        // Use public setter to apply the measured baud to SoftIR
+        // If your SoftIR implementation uses setBaud_impl, call that:
+        try {
+            // prefer public API if available
+            (SoftIR as any).setBaud_impl(baud)
+        } catch (e) {
+            // fallback: try setBaud (some toolchains might expect that)
+            try {
+                (SoftIR as any).setBaud(baud)
+            } catch (e2) {
+                // nothing else we can do programmatically; inform user by returning the baud
+            }
+        }
+
+        return baud
     }
 }

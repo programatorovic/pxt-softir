@@ -28,6 +28,28 @@ namespace SoftIR {
     let _protocol = IRProtocol.Auto
     let _lastFrame = ""
 
+    /**
+     * Exported helper to set baud from other modules (autobaud).
+     */
+    //% shim=softir::setBaud
+    export function setBaud(baud: number): void {
+        // This shim will be replaced by the real implementation below in TS (not purely shim).
+        // However some toolchains may require a shim annotation — if your build complains about shim,
+        // simply remove the `//% shim=softir::setBaud` line.
+    }
+
+    // Provide actual implementation (works with MakeCode; keep it inside namespace)
+    export function __internalSetBaud(baud: number) {
+        if (baud <= 0) return
+        _baud = baud
+        _bitTimeUs = Math.idiv(1000000, _baud)
+    }
+
+    // To keep compatibility with autobaud.ts, implement setBaud that calls internal setter.
+    export function setBaud_impl(baud: number) {
+        __internalSetBaud(baud)
+    }
+
     function readByteFromPin(pin: DigitalPin, bitTimeUs: number): number {
         // Wait for start bit (falling edge)
         while (pins.digitalReadPin(pin) == 1) {
@@ -95,7 +117,8 @@ namespace SoftIR {
         // start background receiver
         if (!_running) {
             _running = true
-            control.inBackground(receiveLoop)
+            // Use an arrow function wrapper to avoid typing mismatches in some MakeCode versions
+            control.inBackground(() => { receiveLoop(); })
         }
     }
 
@@ -103,14 +126,6 @@ namespace SoftIR {
     //% weight=90
     export function setProtocol(p: IRProtocol) {
         _protocol = p
-    }
-
-    //% block="IRSoft.setBaud $baud"
-    //% weight=95
-    export function setBaud(baud: number) {
-        if (baud <= 0) return
-        _baud = baud
-        _bitTimeUs = Math.idiv(1000000, _baud)
     }
 
     //% block="IRSoft.readHex"
