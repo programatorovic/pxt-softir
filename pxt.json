@@ -1,15 +1,12 @@
 {
-  "name": "softir",
-  "description": "Software UART receiver for IR modules (Keyestudio/HX1838) with autobaud and read-hex blocks.",
-  "dependencies": {
-    "core": "file:../core"
-  },
+  "name": "pxt-softir",
+  "version": "0.0.4",
+  "description": "Software IR via UART with auto baud",
   "files": [
     "softir.ts",
-    "autobaud.ts",
-    "protocols.ts",
-    "README.md"
+    "autobaud.ts"
   ],
-  "testFiles": [],
-  "public": true
+  "dependencies": {
+    "core": "*"
+  }
 }
