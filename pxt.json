@@ -1,11 +1,8 @@
 {
   "name": "pxt-softir",
-  "version": "0.0.4",
-  "description": "Software IR via UART with auto baud",
-  "files": [
-    "softir.ts",
-    "autobaud.ts"
-  ],
+  "version": "0.2.0",
+  "description": "Software IR UART reader with HEX output and callback",
+  "files": ["softir.ts", "autobaud.ts"],
   "dependencies": {
     "core": "*"
   }

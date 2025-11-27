@@ -1,23 +1,26 @@
-namespace SoftIR {
-    //% block="IRSoft.autoBaud pin $pin"
+namespace IRSoft {
+
+    //% block="IRSoft AutoBaud RX %pin"
     export function autoBaud(pin: DigitalPin): number {
         let t0 = control.micros()
         while (pins.digitalReadPin(pin) == 1) {
-            if (control.micros() - t0 > 5000000) return 0
+            if (control.micros() - t0 > 3000000) return 0
         }
-        let s = control.micros()
+
+        let start = control.micros()
         while (pins.digitalReadPin(pin) == 0) {}
-        let e = control.micros()
-        let bitTime = e - s
-        if (bitTime <= 0) return 0
-        let baud = Math.round(1000000 / bitTime)
+        let stop = control.micros()
 
-        if (Math.abs(baud - 9600) < 1000) baud = 9600
-        else if (Math.abs(baud - 4800) < 600) baud = 4800
-        else if (Math.abs(baud - 2400) < 400) baud = 2400
-        else if (Math.abs(baud - 19200) < 2000) baud = 19200
+        let bt = stop - start
+        if (bt <= 0) return 0
 
-        SoftIR.setBaud(baud)
-        return baud
+        let est = Math.round(1000000 / bt)
+
+        if (Math.abs(est - 9600) < 800) est = 9600
+        else if (Math.abs(est - 4800) < 600) est = 4800
+        else if (Math.abs(est - 2400) < 400) est = 2400
+        else if (Math.abs(est - 19200) < 1500) est = 19200
+
+        return est
     }
 }
